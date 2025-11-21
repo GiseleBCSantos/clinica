@@ -1,26 +1,19 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import Navbar from "../components/layout/Navbar";
-import LoginPage from "../pages/Login";
-import DashboardPage from "../pages/DashboardPage";
-import PatientListPage from "../pages/PatientsListPage";
-import PatientCreatePage from "../pages/PatientsCreatePage";
-import PatientDetailPage from "../pages/PatientsDetailPage";
-import AlertListPage from "../pages/AlertListPage";
-import NotFoundPage from "../pages/NotFound";
-import { useAuth } from "../hooks/useAuth";
 import { PrivateRoute } from "./PrivateRoute";
-import { AppointmentListPage } from "../pages/AppointmentsListPage";
-import { Sidebar } from "../components/layout/Sidebar";
+import { useAuth } from "../hooks/useAuth";
 
-function AppLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="min-h-screen bg-gray-50">
-      <Navbar />
-      <Sidebar />
-      <main className="ml-64 mt-16 p-6">{children}</main>
-    </div>
-  );
-}
+import LoginPage from "../pages/Login";
+import { LandingPage } from "../pages/LandingPage";
+import DashboardPage from "../pages/DashboardPage";
+import NotFoundPage from "../pages/NotFound";
+
+import PatientListPage from "../pages/PatientsListPage";
+import PatientDetailPage from "../pages/PatientsDetailPage";
+
+import AlertListPage from "../pages/AlertListPage";
+import VitalRecordCreatePage from "../pages/VitalRecordsCreatePage";
+import VitalRecordsListPage from "../pages/VitalRecordsListPage";
+import AppLayout from "../components/layout/AppLayout";
 
 export function AppRouter() {
   const { isAuthenticated } = useAuth();
@@ -28,6 +21,16 @@ export function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route
+          path="/"
+          element={
+            isAuthenticated ? (
+              <Navigate to="/dashboard" replace />
+            ) : (
+              <LandingPage />
+            )
+          }
+        />
         <Route
           path="/login"
           element={
@@ -38,7 +41,6 @@ export function AppRouter() {
             )
           }
         />
-
         <Route
           path="/dashboard"
           element={
@@ -49,7 +51,6 @@ export function AppRouter() {
             </PrivateRoute>
           }
         />
-
         <Route
           path="/patients"
           element={
@@ -60,18 +61,6 @@ export function AppRouter() {
             </PrivateRoute>
           }
         />
-
-        <Route
-          path="/patients/create"
-          element={
-            <PrivateRoute>
-              <AppLayout>
-                <PatientCreatePage />
-              </AppLayout>
-            </PrivateRoute>
-          }
-        />
-
         <Route
           path="/patients/:id"
           element={
@@ -82,18 +71,17 @@ export function AppRouter() {
             </PrivateRoute>
           }
         />
-
+        Vital Records (Permite Create)
         <Route
-          path="/appointments"
+          path="/vital-records"
           element={
             <PrivateRoute>
               <AppLayout>
-                <AppointmentListPage />
+                <VitalRecordsListPage />
               </AppLayout>
             </PrivateRoute>
           }
         />
-
         <Route
           path="/alerts"
           element={
@@ -104,8 +92,6 @@ export function AppRouter() {
             </PrivateRoute>
           }
         />
-
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
