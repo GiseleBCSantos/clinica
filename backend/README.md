@@ -1,67 +1,68 @@
-# Clinic Backend – Fullstack Clinical Management System
+# Clinic+ Backend Service
 
 ## 📌 About the Project
 
-This repository contains the **backend** for the _Clinic+_ system — a complete clinical management platform featuring:
+This repository contains the **RESTful API** for the _Clinic+_ system. It serves as the core logic layer for the clinical management platform, handling data persistence, authentication, and critical business rules.
 
-- Patient registration
-- Healthcare professionals
-- Appointment scheduling
-- Clinical evolutions with **automatic alert generation**
-- Full REST API with JWT authentication
-- PostgreSQL integration through Docker
-- Swagger documentation
+**Key Features:**
+
+- **Role-Based Access Control:** Distinction between administrative users and medical staff (Doctors/Nurses).
+- **Patient Management:** Full CRUD for patient records with priority tracking.
+- **Vital Records:** Logging of temperature, blood pressure, and heart rate.
+- **🤖 Automated Alert System:** Background logic that creates alerts immediately when abnormal vital signs are detected.
+- **Security:** JWT (JSON Web Token) Authentication with refresh rotation.
+- **Documentation:** Automatic Swagger/OpenAPI generation.
 
 ---
 
 ## 🏗️ Tech Stack
 
-### **Backend**
+### **Core**
 
-- Python 3.11+
-- Django 4.2+
-- Django REST Framework (DRF)
-- SimpleJWT (Authentication)
-- drf-spectacular (OpenAPI/Swagger)
-- django-auditlog (Audit history)
-- Gunicorn (Production WSGI)
+- **Python 3.11+**
+- **Django 4.2+**
+- **Django REST Framework (DRF)**
 
-### **Database**
+### **Key Libraries**
 
-- PostgreSQL 14 (via Docker)
+- **SimpleJWT:** Authentication & Token management.
+- **drf-spectacular:** OpenAPI 3.0 schema generation.
+- **django-cors-headers:** Cross-Origin Resource Sharing support.
+- **django-filter:** Advanced filtering for API endpoints.
 
 ### **Infrastructure**
 
-- Docker & Docker Compose
-- Environment variables via `.env`
+- **Docker & Docker Compose:** Containerization.
+- **PostgreSQL:** Production database (SQLite for dev).
+- **Gunicorn:** WSGI HTTP Server.
+- **GitHub Actions:** CI/CD Pipeline.
 
 ---
 
 ## 📁 Project Structure
 
-```
+```text
 backend/
 │
-├── docker-compose.yml
-├── Dockerfile
-├── requirements.txt
-├── .env.example
+├── docker-compose.yml      # Orchestration for Dev/Prod
+├── Dockerfile              # Python image definition
+├── requirements.txt        # Python dependencies
+├── .env.example            # Template for environment variables
 │
-└── clinica/
-    ├── manage.py
+└── clinica/                # Project Root
+    ├── manage.py           # Django CLI entry point
     │
-    ├── clinica/
+    ├── clinica/            # Settings folder
     │   ├── settings.py
     │   ├── urls.py
-    │   ├── wsgi.py
-    │   └── asgi.py
+    │   └── wsgi.py
     │
-    └── core/
-        ├── models.py
-        ├── serializers.py
-        ├── views.py
-        ├── urls.py
-        └── migrations/
+    └── core/               # Main Application
+        ├── models.py       # Database Schema (Patient, Staff, VitalRecord, Alert)
+        ├── serializers.py  # JSON Converters
+        ├── views.py        # API Controllers & ViewSets
+        ├── urls.py         # API Routing
+        └── tests.py        # Unit & Integration Tests
 ```
 
 ---
