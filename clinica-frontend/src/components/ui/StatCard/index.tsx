@@ -4,12 +4,7 @@ export interface StatCardProps {
   variant?: "primary" | "info" | "warning" | "success" | "danger";
 }
 
-export function StatCard({
-  title,
-  value,
-  variant = "primary", // default para evitar undefined
-}: StatCardProps) {
-  // Garantimos que a chave usada sempre seja válida
+export function StatCard({ title, value, variant = "primary" }: StatCardProps) {
   const variantKey: NonNullable<StatCardProps["variant"]> = variant;
 
   const variantClasses: Record<
