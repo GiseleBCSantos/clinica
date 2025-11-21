@@ -1,8 +1,5 @@
 /// <reference types="vite/client" />
-
 import axios from "axios";
-
-// Vite provides ImportMetaEnv and ImportMeta types, so no need to redeclare them.
 
 const API_BASE_URL =
   import.meta.env.VITE_API_BASE_URL || "http://localhost:8000/api";
@@ -14,7 +11,6 @@ export const api = axios.create({
   },
 });
 
-// Request interceptor to add token
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("access_token");
@@ -23,33 +19,28 @@ api.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
-// Response interceptor to handle token refresh
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
 
-    if (error.response?.status === 401 && !originalRequest._retry) {
+    if (
+      error.response?.status === 401 &&
+      !originalRequest._retry &&
+      !originalRequest.url?.includes("/auth/login")
+    ) {
       originalRequest._retry = true;
 
       try {
         const refreshToken = localStorage.getItem("refresh_token");
+        if (!refreshToken) throw new Error("No refresh token");
 
-        if (!refreshToken) {
-          throw new Error("No refresh token");
-        }
-
-        const response = await axios.post(
-          `${API_BASE_URL}/auth/token/refresh/`,
-          {
-            refresh: refreshToken,
-          }
-        );
+        const response = await axios.post(`${API_BASE_URL}/auth/refresh/`, {
+          refresh: refreshToken,
+        });
 
         const { access } = response.data;
         localStorage.setItem("access_token", access);
@@ -59,7 +50,9 @@ api.interceptors.response.use(
       } catch (refreshError) {
         localStorage.removeItem("access_token");
         localStorage.removeItem("refresh_token");
-        window.location.href = "/login";
+        if (window.location.pathname !== "/login") {
+          window.location.href = "/login";
+        }
         return Promise.reject(refreshError);
       }
     }

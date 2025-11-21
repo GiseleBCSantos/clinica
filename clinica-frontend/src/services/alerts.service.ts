@@ -1,44 +1,22 @@
-import { Alert } from "../utils/types";
 import api from "./api";
+import type { Alert, PaginatedResponse } from "../utils/types";
+
+interface AlertParams {
+  page?: number;
+  patient?: number;
+  search?: string;
+}
 
 export const alertsService = {
-  async getAll(): Promise<Alert[]> {
-    const response = await api.get<Alert[]>("/alertas/");
-    return response.data;
-  },
-
-  async getById(id: number): Promise<Alert> {
-    const response = await api.get<Alert>(`/alertas/${id}/`);
-    return response.data;
-  },
-
-  async create(
-    alert: Omit<Alert, "id" | "created_at" | "updated_at">
-  ): Promise<Alert> {
-    const response = await api.post<Alert>("/alertas/", alert);
-    return response.data;
-  },
-
-  async update(id: number, alert: Partial<Alert>): Promise<Alert> {
-    const response = await api.patch<Alert>(`/alertas/${id}/`, alert);
-    return response.data;
-  },
-
-  async delete(id: number): Promise<void> {
-    await api.delete(`/alertas/${id}/`);
-  },
-
-  async markAsViewed(id: number): Promise<Alert> {
-    const response = await api.patch<Alert>(`/alertas/${id}/`, {
-      status: "VISUALIZADO",
+  async getAll(params?: AlertParams) {
+    const { data } = await api.get<PaginatedResponse<Alert>>("/alerts/", {
+      params,
     });
-    return response.data;
+    return data;
   },
 
-  async markAsResolved(id: number): Promise<Alert> {
-    const response = await api.patch<Alert>(`/alertas/${id}/`, {
-      status: "RESOLVIDO",
-    });
-    return response.data;
+  async getById(id: number) {
+    const { data } = await api.get<Alert>(`/alerts/${id}/`);
+    return data;
   },
 };
