@@ -1,78 +1,53 @@
-export interface Alert {
-  id: number;
-  paciente: number;
-  paciente_nome?: string;
-  tipo: "CONSULTA" | "EXAME" | "MEDICACAO" | "RETORNO" | "OUTRO";
-  mensagem: string;
-  data_alerta: string;
-  status: "PENDENTE" | "VISUALIZADO" | "RESOLVIDO";
-  prioridade: "BAIXA" | "MEDIA" | "ALTA" | "URGENTE";
-  created_at: string;
-  updated_at: string;
+export interface User {
+  username: string;
+  first_name: string;
+  last_name: string;
 }
 
-export interface Appointment {
+export interface Staff {
   id: number;
-  paciente: number;
-  paciente_nome?: string;
-  data_hora: string;
-  tipo_consulta:
-    | "CONSULTA"
-    | "RETORNO"
-    | "EXAME"
-    | "PROCEDIMENTO"
-    | "EMERGENCIA";
-  status:
-    | "AGENDADO"
-    | "CONFIRMADO"
-    | "EM_ATENDIMENTO"
-    | "CONCLUIDO"
-    | "CANCELADO"
-    | "FALTOU";
-  observacoes?: string;
-  created_at: string;
-  updated_at: string;
-}
-
-export interface Evolution {
-  id: number;
-  paciente: number;
-  data_atendimento: string;
-  queixa_principal: string;
-  historia_doenca_atual: string;
-  exame_fisico?: string;
-  hipotese_diagnostica?: string;
-  conduta?: string;
-  prescricoes?: string;
-  observacoes?: string;
-  created_at: string;
-  updated_at: string;
+  user: User;
+  role: string;
 }
 
 export interface Patient {
   id: number;
-  nome: string;
-  data_nascimento: string;
-  cpf: string;
-  telefone: string;
-  email: string;
-  endereco: string;
-  cidade: string;
-  estado: string;
-  cep: string;
-  sexo: "M" | "F" | "O";
-  tipo_sanguineo?: string;
-  alergias?: string;
-  medicacoes_atuais?: string;
-  condicoes_preexistentes?: string;
-  created_at: string;
-  updated_at: string;
+  full_name: string;
+  record_number: string;
+  priority: "low" | "medium" | "high";
 }
 
-export interface User {
+export interface VitalRecord {
   id: number;
-  username: string;
-  email: string;
-  first_name: string;
-  last_name: string;
+  patient: number;
+  professional: Staff;
+  temperature?: number | null;
+  systolic_bp?: number | null;
+  diastolic_bp?: number | null;
+  heart_rate?: number | null;
+  notes?: string;
+  created_at: string;
+}
+
+export interface VitalRecordCreate {
+  patient_id: number;
+  temperature?: number;
+  systolic_bp?: number;
+  diastolic_bp?: number;
+  heart_rate?: number;
+  notes?: string;
+}
+
+export interface Alert {
+  id: number;
+  patient: number;
+  message: string;
+  created_at: string;
+}
+
+export interface PaginatedResponse<T> {
+  count: number;
+  next: string | null;
+  previous: string | null;
+  results: T[];
 }

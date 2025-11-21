@@ -1,3 +1,4 @@
+import { User } from "../utils/types";
 import api from "./api";
 
 export interface LoginCredentials {
@@ -5,47 +6,31 @@ export interface LoginCredentials {
   password: string;
 }
 
-export interface LoginResponse {
+export interface AuthResponse {
   access: string;
   refresh: string;
-  user: {
-    id: number;
-    username: string;
-    email: string;
-    first_name: string;
-    last_name: string;
-  };
 }
 
 export const authService = {
-  async login(credentials: LoginCredentials): Promise<LoginResponse> {
-    const response = await api.post<LoginResponse>("/auth/login/", credentials);
-
-    if (response.data.access) {
-      localStorage.setItem("access_token", response.data.access);
-      localStorage.setItem("refresh_token", response.data.refresh);
-      localStorage.setItem("user", JSON.stringify(response.data.user));
-    }
-
-    return response.data;
+  login: async (credentials: LoginCredentials) => {
+    const { data } = await api.post<AuthResponse>("/auth/login/", credentials);
+    localStorage.setItem("access_token", data.access);
+    localStorage.setItem("refresh_token", data.refresh);
+    return data;
   },
 
-  async logout(): Promise<void> {
+  logout: () => {
+    localStorage.removeItem("access_token");
+    localStorage.removeItem("refresh_token");
+    window.location.href = "/login";
+  },
+
+  getUser: async (): Promise<User | null> => {
     try {
-      await api.post("/auth/logout/");
-    } finally {
-      localStorage.removeItem("access_token");
-      localStorage.removeItem("refresh_token");
-      localStorage.removeItem("user");
+      const { data } = await api.get<User>("/users/me/");
+      return data;
+    } catch {
+      return null;
     }
-  },
-
-  getUser() {
-    const userStr = localStorage.getItem("user");
-    return userStr ? JSON.parse(userStr) : null;
-  },
-
-  isAuthenticated(): boolean {
-    return !!localStorage.getItem("access_token");
   },
 };
