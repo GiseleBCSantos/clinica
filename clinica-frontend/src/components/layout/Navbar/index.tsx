@@ -1,33 +1,17 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { logout } from "../../../slices/authSlice";
-
-export default function Navbar() {
-  const dispatch = useDispatch();
+export default function Navbar({
+  onToggleSidebar,
+}: {
+  onToggleSidebar: () => void;
+}) {
   return (
-    <nav className="bg-white shadow p-3">
-      <div className="container mx-auto flex justify-between">
-        <div className="flex items-center gap-4">
-          <Link to="/" className="font-bold">
-            Clinic+
-          </Link>
-          <Link to="/patients" className="text-sm">
-            Pacientes
-          </Link>
-          <Link to="/appointments" className="text-sm">
-            Agendamentos
-          </Link>
-          <Link to="/alerts" className="text-sm">
-            Alertas
-          </Link>
-        </div>
-        <div>
-          <button onClick={() => dispatch(logout())} className="text-sm">
-            Sair
-          </button>
-        </div>
-      </div>
-    </nav>
+    <header className="fixed top-0 left-0 w-full h-16 bg-white border-b border-gray-200 z-20 flex items-center px-4 md:px-6">
+      <button
+        className="md:hidden p-2 mr-4 rounded bg-gray-100 hover:bg-gray-200"
+        onClick={onToggleSidebar}
+      >
+        ☰
+      </button>
+      <h1 className="text-xl font-bold">My App</h1>
+    </header>
   );
 }
