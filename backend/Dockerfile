@@ -3,11 +3,22 @@ FROM python:3.11-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /clinica
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# COPY . .  # não precisa copiar se você vai montar o volume
+COPY . .
+
+WORKDIR /app/clinica
+
+RUN python manage.py collectstatic --noinput
+
+EXPOSE 8000
 
 CMD ["gunicorn", "clinica.wsgi:application", "--bind", "0.0.0.0:8000"]
