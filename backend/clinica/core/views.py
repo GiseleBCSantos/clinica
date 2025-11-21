@@ -1,39 +1,71 @@
-from rest_framework import viewsets, permissions
-from .models import Patient, Professional, Appointment, Evolution, Alert
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.exceptions import PermissionDenied, ValidationError
+
+from .models import Patient, Staff, VitalRecord, Alert
 from .serializers import (
     PatientSerializer,
-    ProfessionalSerializer,
-    AppointmentSerializer,
-    EvolutionSerializer,
-    AlertSerializer
+    StaffSerializer,
+    VitalRecordSerializer,
+    AlertSerializer,
+    UserSerializer,
 )
 
+class MeView(APIView):
+    permission_classes = [IsAuthenticated]
 
-class PatientViewSet(viewsets.ModelViewSet):
-    queryset = Patient.objects.all().order_by('-created_at')
+    def get(self, request):
+        return Response(UserSerializer(request.user).data)
+
+
+class PatientViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Patient.objects.all().order_by("id")
     serializer_class = PatientSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    filterset_fields = ['priority', 'record_number'] 
+    search_fields = ['full_name', 'record_number']   
+    ordering_fields = ['full_name', 'id']            
 
 
-class ProfessionalViewSet(viewsets.ModelViewSet):
-    queryset = Professional.objects.all()
-    serializer_class = ProfessionalSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class StaffViewSet(viewsets.ReadOnlyModelViewSet):
+    queryset = Staff.objects.all().order_by("id")
+    serializer_class = StaffSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    filterset_fields = ['role']
+    search_fields = ['user__username', 'user__first_name', 'user__last_name', 'role']
 
 
-class AppointmentViewSet(viewsets.ModelViewSet):
-    queryset = Appointment.objects.all().order_by('-scheduled_at')
-    serializer_class = AppointmentSerializer
-    permission_classes = [permissions.IsAuthenticated]
+class VitalRecordViewSet(viewsets.ModelViewSet):
+    queryset = VitalRecord.objects.all().order_by("-id")
+    serializer_class = VitalRecordSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
 
+    filterset_fields = ['patient', 'staff'] 
+    search_fields = ['notes']               
+    ordering_fields = ['created_at', 'temperature']
 
-class EvolutionViewSet(viewsets.ModelViewSet):
-    queryset = Evolution.objects.all().order_by('-created_at')
-    serializer_class = EvolutionSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    def perform_create(self, serializer):
+        try:
+            staff = Staff.objects.get(user=self.request.user)
+        except Staff.DoesNotExist:
+            raise PermissionDenied("O usuário atual não possui um perfil de funcionário (Staff) vinculado.")
+        
+        serializer.save(staff=staff)
 
 
 class AlertViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Alert.objects.all().order_by('-created_at')
+    queryset = Alert.objects.all().order_by("-created_at")
     serializer_class = AlertSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    filterset_fields = ['patient'] 
+    search_fields = ['message']    
