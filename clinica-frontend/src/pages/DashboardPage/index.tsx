@@ -2,41 +2,43 @@ import { useState, useEffect } from "react";
 import { StatCard } from "../../components/ui/StatCard";
 import { alertsService } from "../../services/alerts.service";
 import { patientsService } from "../../services/patient.service";
-import { appointmentsService } from "../../services/appointment.service";
+
+interface DashboardStats {
+  totalPatients: number;
+  totalAlerts: number;
+  todayAlerts: number;
+}
 
 export function DashboardPage() {
-  const [stats, setStats] = useState({
+  const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
-    todayAppointments: 0,
-    pendingAlerts: 0,
+    totalAlerts: 0,
+    todayAlerts: 0,
   });
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const loadStats = async () => {
       try {
-        const [patients, appointments, alerts] = await Promise.all([
+        const [patients, alerts] = await Promise.all([
           patientsService.getAll(),
-          appointmentsService.getAll(),
           alertsService.getAll(),
         ]);
 
         const today = new Date().toISOString().split("T")[0];
-        const todayAppointments = appointments.filter((apt) =>
-          apt.data_hora.startsWith(today)
-        ).length;
 
-        const pendingAlerts = alerts.filter(
-          (alert) => alert.status === "PENDENTE"
+        const todayAlerts = alerts.results.filter((alert) =>
+          alert.created_at.startsWith(today)
         ).length;
 
         setStats({
-          totalPatients: patients.length,
-          todayAppointments,
-          pendingAlerts,
+          totalPatients: patients.count,
+          totalAlerts: alerts.count,
+          todayAlerts,
         });
       } catch (error) {
-        console.error("Erro ao carregar estatísticas:", error);
+        console.error("Error loading dashboard statistics:", error);
       } finally {
         setLoading(false);
       }
@@ -46,7 +48,7 @@ export function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-12">Carregando...</div>;
+    return <div className="text-center py-12">Loading...</div>;
   }
 
   return (
@@ -55,21 +57,21 @@ export function DashboardPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <StatCard
-          title="Total de Pacientes"
+          title="Total Patients"
           value={stats.totalPatients}
           variant="primary"
         />
 
         <StatCard
-          title="Consultas Hoje"
-          value={stats.todayAppointments}
-          variant="info"
+          title="Total Alerts"
+          value={stats.totalAlerts}
+          variant="warning"
         />
 
         <StatCard
-          title="Alertas Pendentes"
-          value={stats.pendingAlerts}
-          variant="warning"
+          title="Today's Alerts"
+          value={stats.todayAlerts}
+          variant="info"
         />
       </div>
     </div>
