@@ -2,8 +2,6 @@ import React, { ReactNode } from "react";
 
 type Variant = "unordered" | "ordered" | "item";
 
-// --- OVERLOADS ---
-
 export function List(
   props: {
     variant?: "unordered";
@@ -27,8 +25,6 @@ export function List(
     children: ReactNode;
   } & React.HTMLAttributes<HTMLLIElement>
 ): JSX.Element;
-
-// --- IMPLEMENTAÇÃO ÚNICA ---
 
 export function List({
   variant = "unordered",
