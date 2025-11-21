@@ -5,9 +5,20 @@ import environ
 env = environ.Env(
     DEBUG=(bool, False)
 )
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
+env_file = BASE_DIR / '.env'
+
+if not env_file.exists():
+    env_file = BASE_DIR.parent / '.env'
+
+if env_file.exists():
+    print(f"--> .env encontrado em: {env_file}") 
+    environ.Env.read_env(str(env_file))
+else:
+    print("--> .env NÃO ENCONTRADO. Usando defaults.")
+
 
 SECRET_KEY = env('SECRET_KEY', default='dev-secret-key')
 DEBUG = env('DEBUG')
@@ -64,12 +75,8 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'clinica.wsgi.application'
 
-import dj_database_url
-
 DATABASES = {
-    'default': dj_database_url.parse(env('DATABASE_URL'))
-    # 'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
-
+    'default': env.db('DATABASE_URL', default='sqlite:///db.sqlite3')
 }
 
 AUTH_PASSWORD_VALIDATORS = []
