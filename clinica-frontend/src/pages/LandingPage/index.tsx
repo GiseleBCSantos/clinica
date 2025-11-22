@@ -15,9 +15,11 @@ import { Button } from "../../components/ui/Button";
 import { Card } from "../../components/ui/Card";
 import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { AnimatedSection } from "../../components/layout/AnimatedSection";
+import { useAuth } from "../../hooks/useAuth";
 
 export function LandingPage() {
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuth();
 
   const features = [
     {
@@ -65,7 +67,7 @@ export function LandingPage() {
               <span className="text-2xl font-bold text-white">Clinic+</span>
             </div>
             <Button variant="primary" onClick={() => navigate("/login")}>
-              Login
+              {isAuthenticated ? "Go to Dashboard" : "Login"}
             </Button>
           </div>
         </nav>
@@ -321,3 +323,5 @@ export function LandingPage() {
     </ParallaxProvider>
   );
 }
+
+export default LandingPage;

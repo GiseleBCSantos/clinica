@@ -28,13 +28,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const loadUser = async () => {
       try {
-        const storedUser = await authService.getUser();
-        if (storedUser) {
-          setUser(storedUser);
+        const token = localStorage.getItem("access_token");
+        if (token) {
+          const storedUser = await authService.getUser();
+          if (storedUser) {
+            setUser(storedUser);
+          }
         }
       } catch (error) {
-        console.error("Erro ao restaurar sessão:", error);
+        console.error("Error restoring session:", error);
         setUser(null);
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
       } finally {
         setLoading(false);
       }
