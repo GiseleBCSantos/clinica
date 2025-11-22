@@ -19,4 +19,11 @@ export const alertsService = {
     const { data } = await api.get<Alert>(`/alerts/${id}/`);
     return data;
   },
+
+  async getByPatient(patientId: number) {
+    const { data } = await api.get<Alert[]>("/alerts/by-patient/", {
+      params: { patient_id: patientId },
+    });
+    return data;
+  },
 };
