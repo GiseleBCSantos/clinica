@@ -7,7 +7,7 @@ import { Button } from "../../components/ui/Button";
 import { usePatients } from "../../hooks/usePatient";
 import { useVitalRecords } from "../../hooks/useVitalRecords";
 import { formatDate } from "../../utils/formatDate";
-import VitalRecordsCreateModal from "../VitalRecordsCreatePage";
+import VitalRecordsCreateModal from "../VitalRecordsCreateModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../../components/ui/Loading";
@@ -216,6 +216,7 @@ export const PatientDetailPage = () => {
           record={editingRecord ?? undefined}
           open={showModal}
           onClose={() => setShowModal(false)}
+          refetchVitals={loadVitals}
         />
       )}
     </div>
