@@ -5,6 +5,7 @@ import { Input } from "../../components/ui/Input";
 import { Button } from "../../components/ui/Button";
 import { useVitalRecords } from "../../hooks/useVitalRecords";
 import { formatDate } from "../../utils/formatDate";
+import Loading from "../../components/ui/Loading";
 
 export function VitalRecordsListPage() {
   const { records, count, loading, error, fetchRecords } = useVitalRecords();
@@ -44,7 +45,7 @@ export function VitalRecordsListPage() {
         </div>
 
         {loading ? (
-          <div className="text-center py-12 text-gray-500">Loading...</div>
+          <Loading />
         ) : error ? (
           <div className="text-center py-12 text-red-600">{error}</div>
         ) : records.length === 0 ? (

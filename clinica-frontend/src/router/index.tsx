@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { PrivateRoute } from "./PrivateRoute";
 import { useAuth } from "../hooks/useAuth";
 import { Suspense, lazy } from "react";
+import Loading from "../components/ui/Loading";
 
 const LoginPage = lazy(() => import("../pages/Login"));
 const LandingPage = lazy(() => import("../pages/LandingPage"));
@@ -19,14 +20,7 @@ export function AppRouter() {
   const { isAuthenticated, loading } = useAuth();
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-medical-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+    return <Loading />;
   }
 
   return (

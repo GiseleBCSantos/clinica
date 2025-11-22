@@ -10,6 +10,7 @@ import { formatDate } from "../../utils/formatDate";
 import VitalRecordsCreateModal from "../VitalRecordsCreatePage";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import Loading from "../../components/ui/Loading";
 
 export function PatientDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -70,7 +71,7 @@ export function PatientDetailPage() {
   };
 
   if (!patient)
-    return <div className="text-center py-20 text-gray-400">Loading...</div>;
+    return <Loading />;
   if (vitalsError)
     return <div className="text-center py-20 text-red-500">{vitalsError}</div>;
 
