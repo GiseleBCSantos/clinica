@@ -22,7 +22,7 @@ class MeView(APIView):
 
 
 class PatientViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Patient.objects.all().order_by("id")
+    queryset = Patient.objects.annotate(alerts_count=Count('alert')).all().order_by("id")
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination

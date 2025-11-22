@@ -18,9 +18,11 @@ class StaffSerializer(serializers.ModelSerializer):
 
 
 class PatientSerializer(serializers.ModelSerializer):
+    alerts_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Patient
-        fields = "__all__"
+        fields = ["id", "full_name", "record_number", "priority", "alerts_count"]
 
 
 class VitalRecordSerializer(serializers.ModelSerializer):
