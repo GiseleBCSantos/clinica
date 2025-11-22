@@ -2,7 +2,7 @@ import { useState } from "react";
 import Navbar from "../Navbar";
 import { Sidebar } from "../Sidebar";
 
-function AppLayout({ children }: { children: React.ReactNode }) {
+const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
@@ -16,6 +16,6 @@ function AppLayout({ children }: { children: React.ReactNode }) {
       </div>
     </div>
   );
-}
+};
 
 export default AppLayout;

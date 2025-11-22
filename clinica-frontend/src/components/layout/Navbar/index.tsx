@@ -1,8 +1,8 @@
-export default function Navbar({
+export const Navbar = ({
   onToggleSidebar,
 }: {
   onToggleSidebar: () => void;
-}) {
+}) => {
   return (
     <header className="fixed top-0 left-0 w-full h-16 bg-white border-b border-gray-200 z-20 flex items-center px-4 md:px-6">
       <button
@@ -14,4 +14,6 @@ export default function Navbar({
       <h1 className="text-xl font-bold">My App</h1>
     </header>
   );
-}
+};
+
+export default Navbar;

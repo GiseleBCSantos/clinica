@@ -15,12 +15,12 @@ interface Props {
   onClose: () => void;
 }
 
-export function VitalRecordsCreateModal({
+export const VitalRecordsCreateModal = ({
   patientId,
   record,
   open,
   onClose,
-}: Props) {
+}: Props) => {
   const {
     createRecord,
     updateRecord,
@@ -171,6 +171,6 @@ export function VitalRecordsCreateModal({
       </form>
     </Modal>
   );
-}
+};
 
 export default VitalRecordsCreateModal;

@@ -17,7 +17,7 @@ import { Parallax, ParallaxProvider } from "react-scroll-parallax";
 import { AnimatedSection } from "../../components/layout/AnimatedSection";
 import { useAuth } from "../../hooks/useAuth";
 
-export function LandingPage() {
+export const LandingPage = () => {
   const navigate = useNavigate();
   const { isAuthenticated } = useAuth();
 
@@ -322,6 +322,6 @@ export function LandingPage() {
       </div>
     </ParallaxProvider>
   );
-}
+};
 
 export default LandingPage;

@@ -10,7 +10,7 @@ interface DashboardStats {
   todayAlerts: number;
 }
 
-export function DashboardPage() {
+export const DashboardPage = () => {
   const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
     totalAlerts: 0,

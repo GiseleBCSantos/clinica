@@ -4,7 +4,7 @@ import { formatDateTime } from "../../utils/formatDate";
 import { useAlerts } from "../../hooks/useAlerts";
 import { usePatients } from "../../hooks/usePatient";
 
-export function AlertListPage() {
+export const AlertListPage = () => {
   const { alerts, loading, error, fetchAlerts } = useAlerts();
   const { patients, fetchPatients } = usePatients();
 
@@ -59,6 +59,6 @@ export function AlertListPage() {
       )}
     </div>
   );
-}
+};
 
 export default AlertListPage;

@@ -6,12 +6,12 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export function Card({
+export const Card = ({
   children,
   variant = "default",
   className = "",
   ...props
-}: CardProps) {
+}: CardProps) => {
   const variants = {
     default: "bg-white rounded-lg shadow-sm border border-gray-200",
     header: "px-6 py-4 border-b border-gray-200",
@@ -26,6 +26,6 @@ export function Card({
       {children}
     </Component>
   );
-}
+};
 
 export default Card;

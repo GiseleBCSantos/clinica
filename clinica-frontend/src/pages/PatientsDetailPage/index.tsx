@@ -12,7 +12,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
 import Loading from "../../components/ui/Loading";
 
-export function PatientDetailPage() {
+export const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const patientId = id ? Number(id) : null;
 
@@ -70,8 +70,7 @@ export function PatientDetailPage() {
       : "success";
   };
 
-  if (!patient)
-    return <Loading />;
+  if (!patient) return <Loading />;
   if (vitalsError)
     return <div className="text-center py-20 text-red-500">{vitalsError}</div>;
 
@@ -221,6 +220,6 @@ export function PatientDetailPage() {
       )}
     </div>
   );
-}
+};
 
 export default PatientDetailPage;

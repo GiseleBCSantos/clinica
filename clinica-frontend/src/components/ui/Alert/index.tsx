@@ -9,7 +9,7 @@ interface AlertProps extends HTMLAttributes<HTMLDivElement> {
   className?: string;
 }
 
-export function Alert({
+export const Alert = ({
   children,
   variant = "info",
   icon,
@@ -17,7 +17,7 @@ export function Alert({
   onClose,
   className = "",
   ...props
-}: AlertProps) {
+}: AlertProps) => {
   const variants = {
     info: "bg-blue-50 border-blue-200 text-blue-800",
     success: "bg-green-50 border-green-200 text-green-800",
@@ -57,6 +57,6 @@ export function Alert({
       </div>
     </div>
   );
-}
+};
 
 export default Alert;

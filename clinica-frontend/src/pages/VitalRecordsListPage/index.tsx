@@ -7,7 +7,7 @@ import { useVitalRecords } from "../../hooks/useVitalRecords";
 import { formatDate } from "../../utils/formatDate";
 import Loading from "../../components/ui/Loading";
 
-export function VitalRecordsListPage() {
+export const VitalRecordsListPage = () => {
   const { records, count, loading, error, fetchRecords } = useVitalRecords();
   const [searchName, setSearchName] = useState("");
   const [page, setPage] = useState(1);
@@ -97,6 +97,6 @@ export function VitalRecordsListPage() {
       </Card>
     </div>
   );
-}
+};
 
 export default VitalRecordsListPage;

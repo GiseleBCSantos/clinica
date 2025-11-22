@@ -8,12 +8,12 @@ interface AnimatedSectionProps {
   delay?: number;
 }
 
-export function AnimatedSection({
+export const AnimatedSection = ({
   children,
   className = "",
   animationType = "fade",
   delay = 0,
-}: AnimatedSectionProps) {
+}: AnimatedSectionProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isVisible = useScrollAnimation(ref, { threshold: 0.1 });
 
@@ -44,4 +44,6 @@ export function AnimatedSection({
       {children}
     </div>
   );
-}
+};
+
+export default AnimatedSection;

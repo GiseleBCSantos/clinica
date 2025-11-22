@@ -8,13 +8,13 @@ const menuItems = [
   { path: "/alerts", label: "Alerts", icon: "🔔" },
 ];
 
-export function Sidebar({
+export const Sidebar = ({
   isOpen,
   onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) {
+}) => {
   const { logout } = useAuth();
   if (typeof window !== "undefined") {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
@@ -81,4 +81,6 @@ export function Sidebar({
       )}
     </>
   );
-}
+};
+
+export default Sidebar;

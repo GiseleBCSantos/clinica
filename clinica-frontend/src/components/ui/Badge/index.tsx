@@ -7,13 +7,13 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   className?: string;
 }
 
-export function Badge({
+export const Badge = ({
   children,
   variant = "default",
   size = "md",
   className = "",
   ...props
-}: BadgeProps) {
+}: BadgeProps) => {
   const variants = {
     default: "bg-gray-100 text-gray-800",
     success: "bg-green-100 text-green-800",
@@ -36,6 +36,6 @@ export function Badge({
       {children}
     </span>
   );
-}
+};
 
 export default Badge;
