@@ -75,15 +75,45 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'clinica.wsgi.application'
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("POSTGRES_DB"),
-        "USER": env("POSTGRES_USER"),
-        "PASSWORD": env("POSTGRES_PASSWORD"),
-        "HOST": env("POSTGRES_HOST"),
-        "PORT": env("POSTGRES_PORT"),
-    }}
+# Database Configuration
+
+def get_env_or_none(var):
+    value = os.getenv(var)
+    return value if value not in [None, "", "None"] else None
+
+
+POSTGRES_DB = get_env_or_none("POSTGRES_DB")
+POSTGRES_USER = get_env_or_none("POSTGRES_USER")
+POSTGRES_PASSWORD = get_env_or_none("POSTGRES_PASSWORD")
+POSTGRES_HOST = get_env_or_none("POSTGRES_HOST")
+POSTGRES_PORT = get_env_or_none("POSTGRES_PORT")
+
+postgres_is_valid = all([
+    POSTGRES_DB,
+    POSTGRES_USER,
+    POSTGRES_PASSWORD,
+    POSTGRES_HOST,
+    POSTGRES_PORT,
+])
+
+if postgres_is_valid:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": POSTGRES_DB,
+            "USER": POSTGRES_USER,
+            "PASSWORD": POSTGRES_PASSWORD,
+            "HOST": POSTGRES_HOST,
+            "PORT": POSTGRES_PORT,
+        }
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.sqlite3",
+            "NAME": BASE_DIR / "db.sqlite3",
+        }
+    }
 
 AUTH_PASSWORD_VALIDATORS = []
 
