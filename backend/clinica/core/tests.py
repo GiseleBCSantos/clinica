@@ -193,6 +193,38 @@ class AlertViewTests(BaseTestCase):
         self.assertEqual(response.data['count'], 1)
         self.assertEqual(response.data['results'][0]['patient_name'], self.patient_low.full_name)
 
+
+class AlertByPatientTests(BaseTestCase):
+    """
+    Testes para a rota GET /api/alerts/by-patient/?patient_id=<id>
+    """
+    def setUp(self):
+        super().setUp()
+        # Criar alertas para o paciente_low
+        for i in range(5):
+            Alert.objects.create(patient=self.patient_low, message=f"Alerta {i+1} - low")
+
+        # Criar alertas para patient_high
+        for i in range(3):
+            Alert.objects.create(patient=self.patient_high, message=f"Alerta {i+1} - high")
+
+    def test_get_all_alerts_for_patient(self):
+        """Deve retornar todos os alertas do paciente."""
+        url = f'/api/alerts/by-patient/?patient_id={self.patient_low.id}'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 5)
+
+        for alert in response.data:
+            self.assertEqual(alert['patient'], self.patient_low.id)
+
+    def test_missing_patient_id_returns_400(self):
+        response = self.client.get('/api/alerts/by-patient/')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('detail', response.data)
+
+
+
 class ValidationTests(BaseTestCase):
     """
     Testes de validação de entrada de dados (Bad Request).

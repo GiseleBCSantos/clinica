@@ -6,9 +6,8 @@ from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied
 from django.db.models import Count
 from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter
-
-
-
+from rest_framework.decorators import action
+from rest_framework import status
 from .models import Patient, Staff, VitalRecord, Alert
 from .serializers import (
     PatientSerializer,
@@ -77,7 +76,16 @@ class AlertViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = AlertSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
-
     filter_backends = [DjangoFilterBackend]
     filterset_class = AlertFilter
     search_fields = ['message']
+
+    @action(detail=False, methods=['get'], url_path='by-patient')
+    def by_patient(self, request):
+        patient_id = request.query_params.get("patient_id")
+        if not patient_id:
+            return Response({"detail": "patient_id é obrigatório."}, status=status.HTTP_400_BAD_REQUEST)
+
+        alerts = Alert.objects.filter(patient_id=patient_id).order_by("-created_at")
+        serializer = self.get_serializer(alerts, many=True)
+        return Response(serializer.data)
