@@ -186,12 +186,12 @@ class AlertViewTests(BaseTestCase):
 
     def test_filter_alerts_by_patient(self):
         """Deve retornar apenas alertas de um paciente específico."""
-        url = f'/api/alerts/?patient={self.patient_low.id}'
+        url = f'/api/alerts/?patient_name={self.patient_low.full_name}'
         response = self.client.get(url)
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data['count'], 1)
-        self.assertEqual(response.data['results'][0]['patient'], self.patient_low.id)
+        self.assertEqual(response.data['results'][0]['patient_name'], self.patient_low.full_name)
 
 class ValidationTests(BaseTestCase):
     """
