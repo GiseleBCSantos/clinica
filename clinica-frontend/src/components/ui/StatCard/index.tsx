@@ -4,7 +4,11 @@ export interface StatCardProps {
   variant?: "primary" | "info" | "warning" | "success" | "danger";
 }
 
-export function StatCard({ title, value, variant = "primary" }: StatCardProps) {
+export const StatCard = ({
+  title,
+  value,
+  variant = "primary",
+}: StatCardProps) => {
   const variantKey: NonNullable<StatCardProps["variant"]> = variant;
 
   const variantClasses: Record<
@@ -24,6 +28,6 @@ export function StatCard({ title, value, variant = "primary" }: StatCardProps) {
       <p className="mt-2 text-3xl font-bold">{value}</p>
     </div>
   );
-}
+};
 
 export default StatCard;

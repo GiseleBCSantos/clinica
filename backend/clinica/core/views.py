@@ -3,7 +3,11 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework.exceptions import PermissionDenied
+from django.db.models import Count
+from django_filters.rest_framework import DjangoFilterBackend, FilterSet, CharFilter
+
+
 
 from .models import Patient, Staff, VitalRecord, Alert
 from .serializers import (
@@ -22,7 +26,7 @@ class MeView(APIView):
 
 
 class PatientViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Patient.objects.all().order_by("id")
+    queryset = Patient.objects.annotate(alerts_count=Count('alert')).all().order_by("id")
     serializer_class = PatientSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
@@ -61,11 +65,19 @@ class VitalRecordViewSet(viewsets.ModelViewSet):
         serializer.save(staff=staff)
 
 
+class AlertFilter(FilterSet):
+    patient_name = CharFilter(field_name='patient__full_name', lookup_expr='icontains')
+
+    class Meta:
+        model = Alert
+        fields = ['patient_name'] 
+
 class AlertViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Alert.objects.all().order_by("-created_at")
+    queryset = Alert.objects.select_related('patient').all().order_by("-created_at")
     serializer_class = AlertSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
-    filterset_fields = ['patient'] 
-    search_fields = ['message']    
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = AlertFilter
+    search_fields = ['message']

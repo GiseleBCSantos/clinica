@@ -1,4 +1,4 @@
-import { NavLink, useNavigate } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "../../../hooks/useAuth";
 
 const menuItems = [
@@ -8,25 +8,14 @@ const menuItems = [
   { path: "/alerts", label: "Alerts", icon: "🔔" },
 ];
 
-export function Sidebar({
+export const Sidebar = ({
   isOpen,
   onClose,
 }: {
   isOpen: boolean;
   onClose: () => void;
-}) {
-  const navigate = useNavigate();
+}) => {
   const { logout } = useAuth();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      navigate("/login");
-    } catch (error) {
-      console.error("Logout failed:", error);
-    }
-  };
-
   if (typeof window !== "undefined") {
     document.body.style.overflow = isOpen ? "hidden" : "auto";
   }
@@ -35,22 +24,25 @@ export function Sidebar({
     <>
       <aside
         className={`
-          fixed top-0 left-0 h-[100vh] w-full sm:w-64 bg-white border-r border-gray-200 z-50
-          transform transition-transform duration-300
-          ${isOpen ? "translate-x-0" : "-translate-x-full"}
-          md:translate-x-0 md:top-16 md:h-[calc(100vh-4rem)]
-          flex flex-col
-        `}
+    bg-white border-r border-gray-200 z-50 flex flex-col justify-between
+
+    /* MOBILE drawer */
+    fixed inset-y-0 left-0 w-64 transform transition-transform duration-300
+    ${isOpen ? "translate-x-0" : "-translate-x-full"}
+
+    /* DESKTOP: fixo, altura máxima 100vh, sempre visível */
+    md:fixed md:top-16 md:left-0 md:h-[calc(100vh-4rem)] md:w-64 md:translate-x-0
+  `}
       >
-        <div className="flex-1 overflow-y-auto p-4 relative">
+        <div className="overflow-y-auto p-4 flex-1">
           <button
             onClick={onClose}
-            className="md:hidden absolute top-4 right-4 text-gray-500 text-2xl"
+            className="md:hidden absolute top-4 right-4 text-2xl"
           >
             ✕
           </button>
 
-          <div className="space-y-2 mt-8 md:mt-0">
+          <nav className="space-y-2 mt-8 md:mt-0">
             {menuItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -68,26 +60,27 @@ export function Sidebar({
                 <span>{item.label}</span>
               </NavLink>
             ))}
-          </div>
+          </nav>
         </div>
 
         <div className="p-4 border-t border-gray-100">
           <button
-            onClick={handleLogout}
-            className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors"
+            className="w-full text-left text-red-600 hover:bg-red-50 px-4 py-3 rounded-lg"
+            onClick={logout}
           >
-            <span className="text-xl">🚪</span>
-            <span>Logout</span>
+            Logout
           </button>
         </div>
       </aside>
 
       {isOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-30 z-40"
+          className="fixed inset-0 bg-black bg-opacity-30 z-40 md:hidden"
           onClick={onClose}
         />
       )}
     </>
   );
-}
+};
+
+export default Sidebar;

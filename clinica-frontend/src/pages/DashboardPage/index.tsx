@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { StatCard } from "../../components/ui/StatCard";
 import { alertsService } from "../../services/alerts.service";
 import { patientsService } from "../../services/patient.service";
+import Loading from "../../components/ui/Loading";
 
 interface DashboardStats {
   totalPatients: number;
@@ -9,7 +10,7 @@ interface DashboardStats {
   todayAlerts: number;
 }
 
-export function DashboardPage() {
+export const DashboardPage = () => {
   const [stats, setStats] = useState<DashboardStats>({
     totalPatients: 0,
     totalAlerts: 0,
@@ -48,7 +49,7 @@ export function DashboardPage() {
   }, []);
 
   if (loading) {
-    return <div className="text-center py-12">Loading...</div>;
+    return <Loading />;
   }
 
   return (

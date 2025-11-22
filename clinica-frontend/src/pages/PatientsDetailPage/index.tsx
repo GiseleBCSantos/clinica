@@ -7,11 +7,12 @@ import { Button } from "../../components/ui/Button";
 import { usePatients } from "../../hooks/usePatient";
 import { useVitalRecords } from "../../hooks/useVitalRecords";
 import { formatDate } from "../../utils/formatDate";
-import VitalRecordsCreateModal from "../VitalRecordsCreatePage";
+import VitalRecordsCreateModal from "../VitalRecordsCreateModal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare } from "@fortawesome/free-regular-svg-icons";
+import Loading from "../../components/ui/Loading";
 
-export function PatientDetailPage() {
+export const PatientDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const patientId = id ? Number(id) : null;
 
@@ -69,8 +70,7 @@ export function PatientDetailPage() {
       : "success";
   };
 
-  if (!patient)
-    return <div className="text-center py-20 text-gray-400">Loading...</div>;
+  if (!patient) return <Loading />;
   if (vitalsError)
     return <div className="text-center py-20 text-red-500">{vitalsError}</div>;
 
@@ -216,10 +216,11 @@ export function PatientDetailPage() {
           record={editingRecord ?? undefined}
           open={showModal}
           onClose={() => setShowModal(false)}
+          refetchVitals={loadVitals}
         />
       )}
     </div>
   );
-}
+};
 
 export default PatientDetailPage;

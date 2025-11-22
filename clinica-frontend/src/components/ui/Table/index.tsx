@@ -11,7 +11,7 @@ interface TableProps<T> {
   onPageChange: (page: number) => void;
 }
 
-export function Table<T>({
+export const Table = <T,>({
   headers,
   data,
   renderRow,
@@ -19,7 +19,7 @@ export function Table<T>({
   currentPage,
   totalPages,
   onPageChange,
-}: TableProps<T>) {
+}: TableProps<T>) => {
   const getPaginationButtons = () => {
     const buttons: (number | "...")[] = [];
     const start = Math.max(1, currentPage - 2);
@@ -127,6 +127,6 @@ export function Table<T>({
       )}
     </div>
   );
-}
+};
 
 export default Table;

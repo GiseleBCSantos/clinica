@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/Button";
 
-export function NotFoundPage() {
+export const NotFoundPage = () => {
   return (
     <main className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="text-center animate-fade-in">

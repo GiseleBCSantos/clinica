@@ -15,7 +15,7 @@ interface SelectProps {
   error?: string;
 }
 
-export function Select({
+export const Select = ({
   label,
   name,
   value,
@@ -23,7 +23,7 @@ export function Select({
   onBlur,
   options,
   error,
-}: SelectProps) {
+}: SelectProps) => {
   return (
     <div className="flex flex-col">
       <label htmlFor={name} className="mb-1 text-sm font-medium text-gray-700">
@@ -51,6 +51,6 @@ export function Select({
       {error && <p className="mt-1 text-sm text-red-600">{error}</p>}
     </div>
   );
-}
+};
 
 export default Select;

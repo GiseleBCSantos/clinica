@@ -5,7 +5,7 @@ import { Badge } from "../../components/ui/Badge";
 import { usePatients } from "../../hooks/usePatient";
 import { Button } from "../../components/ui/Button";
 
-export function PatientListPage() {
+export const PatientListPage = () => {
   const { patients, totalCount, loading, error, fetchPatients } = usePatients();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
@@ -112,6 +112,6 @@ export function PatientListPage() {
       </Card>
     </div>
   );
-}
+};
 
 export default PatientListPage;

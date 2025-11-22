@@ -18,9 +18,11 @@ class StaffSerializer(serializers.ModelSerializer):
 
 
 class PatientSerializer(serializers.ModelSerializer):
+    alerts_count = serializers.IntegerField(read_only=True)
+
     class Meta:
         model = Patient
-        fields = "__all__"
+        fields = ["id", "full_name", "record_number", "priority", "alerts_count"]
 
 
 class VitalRecordSerializer(serializers.ModelSerializer):
@@ -47,8 +49,9 @@ class VitalRecordSerializer(serializers.ModelSerializer):
 
 class AlertSerializer(serializers.ModelSerializer):
     message = serializers.CharField(read_only=True)
+    patient_name = serializers.CharField(source='patient.full_name', read_only=True)
 
     class Meta:
         model = Alert
-        fields = ["id", "patient", "message", "created_at"]
-        read_only_fields = ["id", "message", "created_at"]
+        fields = ["id", "patient","patient_name", "message", "created_at"]
+        read_only_fields = ["id", "message", "patient_name", "created_at"]

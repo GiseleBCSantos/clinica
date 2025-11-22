@@ -8,13 +8,13 @@ interface DataDisplayProps {
   className?: string;
 }
 
-export function DataDisplay({
+export const DataDisplay = ({
   label,
   value,
   icon,
   variant = "vertical",
   className = "",
-}: DataDisplayProps) {
+}: DataDisplayProps) => {
   if (variant === "horizontal") {
     return (
       <div className={`flex items-center justify-between ${className}`}>
@@ -36,6 +36,6 @@ export function DataDisplay({
       <p className="text-base font-medium text-gray-900 mt-1">{value}</p>
     </div>
   );
-}
+};
 
 export default DataDisplay;

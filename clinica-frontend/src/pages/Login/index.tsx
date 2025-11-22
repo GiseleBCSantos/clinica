@@ -16,7 +16,7 @@ const loginSchema = Yup.object({
     .min(3, "Password must be at least 3 characters"),
 });
 
-export function LoginPage() {
+export const LoginPage = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
@@ -101,6 +101,6 @@ export function LoginPage() {
       </Card>
     </div>
   );
-}
+};
 
 export default LoginPage;

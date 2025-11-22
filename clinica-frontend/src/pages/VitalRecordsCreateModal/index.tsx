@@ -13,14 +13,16 @@ interface Props {
   record?: any;
   open: boolean;
   onClose: () => void;
+  refetchVitals: () => void;
 }
 
-export function VitalRecordsCreateModal({
+export const VitalRecordsCreateModal = ({
   patientId,
   record,
   open,
   onClose,
-}: Props) {
+  refetchVitals,
+}: Props) => {
   const {
     createRecord,
     updateRecord,
@@ -96,6 +98,7 @@ export function VitalRecordsCreateModal({
 
         resetForm();
         onClose();
+        refetchVitals();
       } catch (err) {
         console.error(err);
       } finally {
@@ -171,6 +174,6 @@ export function VitalRecordsCreateModal({
       </form>
     </Modal>
   );
-}
+};
 
 export default VitalRecordsCreateModal;
