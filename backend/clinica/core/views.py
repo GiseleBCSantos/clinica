@@ -4,6 +4,8 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.exceptions import PermissionDenied, ValidationError
+from django.db.models import Count
+
 
 from .models import Patient, Staff, VitalRecord, Alert
 from .serializers import (
@@ -62,10 +64,10 @@ class VitalRecordViewSet(viewsets.ModelViewSet):
 
 
 class AlertViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = Alert.objects.all().order_by("-created_at")
+    queryset = Alert.objects.select_related('patient').all().order_by("-created_at")
     serializer_class = AlertSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
-    filterset_fields = ['patient'] 
+    filterset_fields = ['patient_name'] 
     search_fields = ['message']    
