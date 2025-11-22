@@ -9,17 +9,10 @@ function AppLayout({ children }: { children: React.ReactNode }) {
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <Navbar onToggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
 
-      <div className="flex flex-1">
+      <div className="flex-1 pt-16 flex">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
-        <main
-          className={`
-            flex-1 mt-16 p-6 transition-all duration-300
-            ${sidebarOpen ? "ml-64 md:ml-64" : "ml-0 md:ml-64"}
-          `}
-        >
-          {children}
-        </main>
+        <main className="flex-1 p-6 overflow-auto md:ml-64">{children}</main>
       </div>
     </div>
   );
