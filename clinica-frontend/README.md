@@ -1,73 +1,220 @@
-# React + TypeScript + Vite
+# Clinic+ Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Clinical management system built with **React**, **TypeScript**, **Vite**, and **TailwindCSS**.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 🚀 Technologies
 
-## React Compiler
+- **React 18** — UI library
+- **TypeScript** — Static typing
+- **Vite** — Fast build tool and dev server
+- **React Router DOM** — Routing
+- **Axios** — HTTP client
+- **TailwindCSS** — Utility-first styling
+- **Context API** — Authentication state management
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## 📋 Requirements
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- Node.js 18+
+- npm or yarn
+- Backend running at: **http://localhost:8000**
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+---
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## 🔧 Installation
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+### 1. Clone the repository or extract the ZIP
+
+### 2. Install dependencies
+
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### 3. Configure environment variables
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Copy the example file:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+cp .env.example .env
 ```
+
+Set your backend URL:
+
+```
+VITE_API_BASE_URL=http://localhost:8000/api
+```
+
+### 4. Start the development server
+
+```bash
+npm run dev
+```
+
+The application will be available at:  
+👉 **http://localhost:3000**
+
+---
+
+## 📦 Available Scripts
+
+| Script            | Description              |
+| ----------------- | ------------------------ |
+| `npm run dev`     | Start development server |
+| `npm run build`   | Build for production     |
+| `npm run preview` | Preview production build |
+| `npm run lint`    | Run linter               |
+
+---
+
+## 🏗️ Project Structure
+
+```
+src/
+├── pages/
+├── components/
+│   ├── ui/
+│   ├── layout/
+│   └── domain/
+├── services/
+├── hooks/
+├── context/
+├── router/
+├── utils/
+├── App.tsx
+└── main.tsx
+```
+
+---
+
+## 🔑 Authentication (JWT)
+
+The application uses **JWT authentication with refresh tokens**:
+
+- Tokens stored in `localStorage`
+- Axios interceptor adds token to requests automatically
+- Automatic refresh when token expires
+- Redirects to login if not authenticated
+
+---
+
+## 🎨 Styling
+
+- Utility-first styling with **TailwindCSS**
+- Clean, medical-themed UI (blue tones)
+- Reusable UI components under `src/components/ui/`
+- Mobile-first responsive design
+
+---
+
+## 📡 Backend Integration (Updated Endpoints)
+
+The backend exposes the following routes, based on the Django router configuration:
+
+---
+
+### 🔐 Authentication
+
+#### Login
+
+```
+POST /api/auth/login/
+```
+
+#### Refresh Token
+
+```
+POST /api/auth/refresh/
+```
+
+#### Current User
+
+```
+GET /api/users/me/
+```
+
+---
+
+## 🧩 Core Resources
+
+### 👥 Patients
+
+```
+GET    /api/patients/
+POST   /api/patients/
+GET    /api/patients/{id}/
+```
+
+### 🧑‍⚕️ Staff
+
+```
+GET /api/staff/
+```
+
+### ❤️ Vital Records
+
+```
+GET  /api/vital-records/
+POST /api/vital-records/
+PUT /api/vital-records/{id}/
+```
+
+### 🚨 Alerts
+
+```
+GET  /api/alerts/
+POST /api/alerts/
+```
+
+---
+
+## 🚀 Deployment
+
+### Build for production
+
+```bash
+npm run build
+```
+
+Output will be in the `dist/` directory.
+
+### Preview the production build
+
+```bash
+npm run preview
+```
+
+### Deployment
+
+- **Vercel**
+
+Set the production API URL:
+
+```
+VITE_API_BASE_URL=https://your-production-url.com/api
+```
+
+---
+
+## 🔒 Security
+
+- JWT tokens handled securely
+- Form validation
+- Private routes access control
+- Input sanitization
+- Backend CORS configured
+
+---
+
+## 📝 License
+
+This project is private and proprietary.
+
+---
+
+## 👥 Support
+
+For questions or issues, contact the development team.
