@@ -7,9 +7,16 @@ interface ModalProps {
   onClose: () => void;
   title?: string;
   children: ReactNode;
+  size?: "sm" | "md" | "lg";
 }
 
-export const Modal = ({ open, onClose, title, children }: ModalProps) => {
+export const Modal = ({
+  open,
+  onClose,
+  title,
+  children,
+  size = "md",
+}: ModalProps) => {
   useEffect(() => {
     if (open) {
       document.body.style.overflow = "hidden";
@@ -23,6 +30,12 @@ export const Modal = ({ open, onClose, title, children }: ModalProps) => {
 
   if (!open) return null;
 
+  const sizeClass = {
+    sm: "max-w-sm",
+    md: "max-w-lg",
+    lg: "max-w-3xl",
+  }[size];
+
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-center">
       <div
@@ -30,7 +43,9 @@ export const Modal = ({ open, onClose, title, children }: ModalProps) => {
         onClick={onClose}
       ></div>
 
-      <div className="relative bg-white rounded-lg shadow-xl max-w-lg w-full p-6 md:p-8 z-10">
+      <div
+        className={`relative bg-white rounded-lg shadow-xl w-full p-6 md:p-8 z-10 ${sizeClass}`}
+      >
         {title && (
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl md:text-2xl font-semibold text-gray-900">
@@ -46,7 +61,7 @@ export const Modal = ({ open, onClose, title, children }: ModalProps) => {
           </div>
         )}
 
-        <div className="space-y-4">{children}</div>
+        <div className="max-h-[80vh] overflow-y-auto">{children}</div>
       </div>
     </div>,
     document.body

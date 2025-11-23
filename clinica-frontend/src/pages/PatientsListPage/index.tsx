@@ -4,12 +4,29 @@ import { Table } from "../../components/ui/Table";
 import { Badge } from "../../components/ui/Badge";
 import { usePatients } from "../../hooks/usePatient";
 import { Button } from "../../components/ui/Button";
+import Modal from "../../components/ui/Modal";
+import { useAlerts } from "../../hooks/useAlerts";
+import Loading from "../../components/ui/Loading";
+import { useNavigate } from "react-router-dom";
+import DataDisplay from "../../components/ui/DataDisplay";
+import { formatDate } from "../../utils/formatDate";
 
 export const PatientListPage = () => {
-  const { patients, totalCount, loading, error, fetchPatients } = usePatients();
+  const {
+    patients,
+    totalCount,
+    loading: patientsLoading,
+    error,
+    fetchPatients,
+  } = usePatients();
+  const navigate = useNavigate();
+  const { alerts, fetchAlertsByPatient, loading: alertsLoading } = useAlerts();
   const [search, setSearch] = useState("");
   const [page, setPage] = useState(1);
   const [pendingSearch, setPendingSearch] = useState("");
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedPatientName, setSelectedPatientName] = useState("");
 
   useEffect(() => {
     fetchPatients({ search, page });
@@ -36,6 +53,17 @@ export const PatientListPage = () => {
       high: "danger",
     };
     return priority ? variants[priority] : "default";
+  };
+
+  const handleAlertsClick = async (e: React.MouseEvent, patient: any) => {
+    e.stopPropagation();
+    setSelectedPatientName(patient.full_name);
+    setModalOpen(true);
+    await fetchAlertsByPatient(patient.id); // busca os alertas do paciente
+  };
+
+  const navigateToPatientDetails = (patientId: number) => {
+    navigate(`/patients/${patientId}`);
   };
 
   const totalPages = Math.ceil(totalCount / 10);
@@ -65,7 +93,7 @@ export const PatientListPage = () => {
       </div>
 
       <Card variant="header" title={`Patient List (${totalCount})`}>
-        {loading ? (
+        {patientsLoading ? (
           <div className="text-center py-12 text-gray-500">
             Loading patients...
           </div>
@@ -77,7 +105,7 @@ export const PatientListPage = () => {
           </div>
         ) : (
           <Table
-            headers={["Full Name", "Record #", "Priority"]}
+            headers={["Full Name", "Record #", "Priority", "Actions"]}
             data={patients}
             currentPage={page}
             totalPages={totalPages}
@@ -86,9 +114,7 @@ export const PatientListPage = () => {
               <tr
                 key={patient.id}
                 className="cursor-pointer hover:bg-gray-50 transition-colors"
-                onClick={() =>
-                  (window.location.href = `/patients/${patient.id}`)
-                }
+                onClick={() => navigateToPatientDetails(patient.id)}
               >
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {patient.full_name}
@@ -105,11 +131,52 @@ export const PatientListPage = () => {
                     "-"
                   )}
                 </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <Button
+                    onClick={(e) => handleAlertsClick(e, patient)}
+                    size="sm"
+                  >
+                    {patient.alerts_count || 0} Alerts
+                  </Button>
+                </td>
               </tr>
             )}
           />
         )}
       </Card>
+
+      <Modal
+        open={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={`Alerts - ${selectedPatientName}`}
+        size="lg"
+      >
+        {alertsLoading ? (
+          <Loading />
+        ) : alerts.length === 0 ? (
+          <p className="text-center text-gray-500 py-6">No alerts</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 max-h-[70vh] overflow-y-auto">
+            {alerts.slice(0, 6).map((alert) => (
+              <div
+                key={alert.id}
+                className="relative p-5 border border-gray-300 rounded-2xl shadow-sm bg-gray-50 space-y-3 hover:shadow-md transition-shadow duration-200 break-words flex flex-col justify-between"
+              >
+                <DataDisplay
+                  label="Message"
+                  value={alert.message}
+                  className="text-gray-900 text-base font-medium"
+                />
+                <DataDisplay
+                  label="Created At"
+                  value={formatDate(alert.created_at)}
+                  className="text-gray-500 text-sm"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };

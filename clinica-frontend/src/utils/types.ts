@@ -15,6 +15,7 @@ export interface Patient {
   full_name: string;
   record_number: string;
   priority: "low" | "medium" | "high";
+  alerts_count: number;
 }
 
 export interface VitalRecord {
@@ -41,6 +42,7 @@ export interface VitalRecordCreate {
 export interface Alert {
   id: number;
   patient: number;
+  patient_name: string;
   message: string;
   created_at: string;
 }

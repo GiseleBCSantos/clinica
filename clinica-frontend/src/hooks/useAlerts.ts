@@ -21,10 +21,25 @@ export function useAlerts() {
     }
   }, []);
 
+  const fetchAlertsByPatient = useCallback(async (patientId: number) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const data = await alertsService.getByPatient(patientId);
+      setAlerts(data);
+    } catch (err) {
+      setError("Erro ao carregar alertas do paciente.");
+      console.error(err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
   return {
     alerts,
     loading,
     error,
     fetchAlerts,
+    fetchAlertsByPatient,
   };
 }
