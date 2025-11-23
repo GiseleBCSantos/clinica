@@ -46,7 +46,7 @@ class StaffViewSet(viewsets.ReadOnlyModelViewSet):
 
 
 class VitalRecordViewSet(viewsets.ModelViewSet):
-    queryset = VitalRecord.objects.all().order_by("-id")
+    queryset = VitalRecord.objects.select_related('patient', 'staff').all().order_by("-id")
     serializer_class = VitalRecordSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
