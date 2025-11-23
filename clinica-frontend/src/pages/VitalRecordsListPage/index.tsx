@@ -73,7 +73,7 @@ export const VitalRecordsListPage = () => {
                   {formatDate(vital.created_at)}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
-                  {vital.patient}
+                  {vital.patient_name}
                 </td>
                 <td className="px-6 py-4 text-sm text-gray-900">
                   {vital.temperature ?? "-"}
