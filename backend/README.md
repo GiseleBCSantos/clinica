@@ -1,186 +1,188 @@
-# Clinic+ Backend Service
+# 🏥 Clinic — Backend (Django + DRF)
 
-## 📌 About the Project
-
-This repository contains the **RESTful API** for the _Clinic+_ system. It serves as the core logic layer for the clinical management platform, handling data persistence, authentication, and critical business rules.
-
-**Key Features:**
-
-- **Role-Based Access Control:** Distinction between administrative users and medical staff (Doctors/Nurses).
-- **Patient Management:** Full CRUD for patient records with priority tracking.
-- **Vital Records:** Logging of temperature, blood pressure, and heart rate.
-- **🤖 Automated Alert System:** Background logic that creates alerts immediately when abnormal vital signs are detected.
-- **Security:** JWT (JSON Web Token) Authentication with refresh rotation.
-- **Documentation:** Automatic Swagger/OpenAPI generation.
+This is the backend for the **Clinic** application, built using **Django REST Framework**, **PostgreSQL**, and **Docker**.  
+The API manages patients, staff members, vital signs, alerts, and JWT authentication.
 
 ---
 
-## 🏗️ Tech Stack
+## 🚀 Technologies Used
 
-### **Core**
+- Python 3.11
+- Django 5
+- Django REST Framework
+- SimpleJWT
+- PostgreSQL
+- Docker & Docker Compose
+- drf-spectacular (Swagger)
 
-- **Python 3.11+**
-- **Django 4.2+**
-- **Django REST Framework (DRF)**
+---
 
-### **Key Libraries**
+## 📦 Requirements
 
-- **SimpleJWT:** Authentication & Token management.
-- **drf-spectacular:** OpenAPI 3.0 schema generation.
-- **django-cors-headers:** Cross-Origin Resource Sharing support.
-- **django-filter:** Advanced filtering for API endpoints.
+- Docker
+- Docker Compose
+- (Optional) Python 3.11 + virtualenv
 
-### **Infrastructure**
+---
 
-- **Docker & Docker Compose:** Containerization.
-- **PostgreSQL:** Production database (SQLite for dev).
-- **Gunicorn:** WSGI HTTP Server.
-- **GitHub Actions:** CI/CD Pipeline.
+# ▶️ Running the Backend
+
+## 1. Start all containers
+
+```sh
+docker-compose up -d --build
+```
+
+## 2. Apply database migrations
+
+```sh
+docker-compose exec backend python manage.py migrate
+```
+
+## 3. Seed initial data
+
+```sh
+docker-compose exec backend python manage.py seed_initial_data
+```
+
+This creates initial users, staff, and sample patient data.
+
+---
+
+## 🧪 Running Tests
+
+```sh
+docker-compose exec backend python manage.py test
+```
+
+The test suite covers:
+
+- JWT Login
+- `/users/me/` endpoint
+- Patients
+- Staff
+- Vital Records
+- Alerts
+
+---
+
+## 🔧 Useful Commands
+
+### Create new migrations
+
+```sh
+docker-compose exec backend python manage.py makemigrations
+```
+
+### Reset database and rebuild everything
+
+```sh
+docker-compose down -v
+docker-compose up -d --build
+docker-compose exec backend python manage.py migrate
+```
 
 ---
 
 ## 📁 Project Structure
 
-```text
+```
 backend/
+├── clinica/
+│   ├── settings.py
+│   ├── urls.py
+│   └── ...
 │
-├── docker-compose.yml      # Orchestration for Dev/Prod
-├── Dockerfile              # Python image definition
-├── requirements.txt        # Python dependencies
-├── .env.example            # Template for environment variables
+├── core/
+│   ├── models.py
+│   ├── views.py
+│   ├── serializers.py
+│   ├── urls.py
+│   ├── tests.py
+│   └── management/
+│       └── commands/
+│           └── seed_initial_data.py
 │
-└── clinica/                # Project Root
-    ├── manage.py           # Django CLI entry point
-    │
-    ├── clinica/            # Settings folder
-    │   ├── settings.py
-    │   ├── urls.py
-    │   └── wsgi.py
-    │
-    └── core/               # Main Application
-        ├── models.py       # Database Schema (Patient, Staff, VitalRecord, Alert)
-        ├── serializers.py  # JSON Converters
-        ├── views.py        # API Controllers & ViewSets
-        ├── urls.py         # API Routing
-        └── tests.py        # Unit & Integration Tests
+├── Dockerfile
+├── requirements.txt
+└── docker-compose.yml
 ```
 
 ---
 
-## 🚀 How to Run the Project
+## 🔐 Authentication (JWT)
 
-### 🔹 1) Running with Docker (Recommended)
-
-Start all services:
-
-```
-docker-compose up -d
-```
-
-Run migrations:
-
-```
-docker-compose exec web python manage.py migrate
-```
-
-Create superuser:
-
-```
-docker-compose exec web python manage.py createsuperuser
-```
-
----
-
-### 🔹 2) Running Locally (Without Docker)
-
-```
-pip install -r requirements.txt
-python manage.py migrate
-python manage.py runserver
-```
-
----
-
-## 🔑 Authentication (JWT)
-
-### Obtain Token:
-
-```
-POST /api/auth/login/
-```
-
-Payload:
+### Login
 
 ```json
+POST /api/auth/login/
 {
   "username": "admin",
-  "password": "admin"
+  "password": "admin123"
 }
 ```
 
-Use token in requests:
+### Refresh token
 
+```json
+POST /api/auth/refresh/
 ```
-Authorization: Bearer <token>
+
+### Get authenticated user
+
+```json
+GET /api/users/me/
 ```
 
 ---
 
-## 📘 API Documentation
+## 📚 API Documentation
 
-After the server starts:
+Swagger UI:  
+`http://localhost:8000/api/schema/swagger/`
 
-- Swagger UI → `http://localhost:8000/api/schema/swagger/`
-- OpenAPI JSON → `http://localhost:8000/api/schema/`
+OpenAPI JSON:  
+`http://localhost:8000/api/schema/`
 
 ---
 
-## 🩺 Business Logic – Automatic Alerts
+## 🧩 Main Endpoints
 
-Whenever an **Evolution** is created, the system automatically checks vital signs and generates alerts.
+### Patients
 
-### Trigger Conditions:
+```
+GET /api/patients/
+POST /api/patients/
+GET /api/patients/{id}/
+```
 
-- Temperature > **38.5°C**
-- Systolic Blood Pressure > **140**
-- Heart Rate > **120 bpm**
+### Staff
 
-Generated alerts appear at:
+```
+GET /api/staff/
+```
+
+### Vital Records
+
+```
+POST /api/vital-records/
+GET /api/vital-records/
+```
+
+### Alerts
 
 ```
 GET /api/alerts/
 ```
 
-Alerts include:
-
-- `warning`
-- `critical`
-
 ---
 
-## 🛠️ Useful Commands
+## 🛠️ Running Without Docker (optional)
 
-Stop containers:
-
+```sh
+python -m venv env
+source env/bin/activate
+pip install -r requirements.txt
+python manage.py migrate
+python manage.py runserver
 ```
-docker-compose down
-```
-
-Stop and delete database volume:
-
-```
-docker-compose down -v
-```
-
----
-
-## 👩‍💻 Contributing
-
-Pull requests are welcome!  
-Feel free to open issues, suggest improvements, or contribute code.
-
----
-
-## 📝 License
-
-MIT License.
