@@ -30,12 +30,14 @@ class VitalRecordSerializer(serializers.ModelSerializer):
     patient_id = serializers.PrimaryKeyRelatedField(
         source='patient', queryset=Patient.objects.all(), write_only=True
     )
+    patient_name = serializers.CharField(source='patient.full_name', read_only=True)
 
     class Meta:
         model = VitalRecord
         fields = [
             "id",
             "patient_id",
+            "patient_name",
             "professional",
             "temperature",
             "systolic_bp",
