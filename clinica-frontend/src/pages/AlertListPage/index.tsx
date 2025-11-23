@@ -6,17 +6,10 @@ import { usePatients } from "../../hooks/usePatient";
 
 export const AlertListPage = () => {
   const { alerts, loading, error, fetchAlerts } = useAlerts();
-  const { patients, fetchPatients } = usePatients();
 
   useEffect(() => {
     fetchAlerts();
-    fetchPatients();
-  }, [fetchAlerts, fetchPatients]);
-
-  const getPatientName = (patientId: number) => {
-    const patient = patients.find((p) => p.id === patientId);
-    return patient?.full_name || `Patient #${patientId}`;
-  };
+  }, [fetchAlerts]);
 
   if (loading)
     return (
@@ -44,7 +37,7 @@ export const AlertListPage = () => {
               <div className="flex flex-col space-y-1">
                 <span className="text-sm text-gray-400">Patient</span>
                 <span className="font-semibold text-gray-900">
-                  {getPatientName(alert.patient)}
+                  {alert.patient_name}
                 </span>
 
                 <span className="text-gray-700 mt-2">{alert.message}</span>
