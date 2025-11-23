@@ -21,6 +21,7 @@ export interface Patient {
 export interface VitalRecord {
   id: number;
   patient: number;
+  patient_name: string;
   professional: Staff;
   temperature?: number | null;
   systolic_bp?: number | null;
